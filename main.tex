@@ -1,0 +1,1002 @@
+\documentclass[12pt]{article}
+
+\usepackage{fullpage}
+
+\usepackage[T1]{fontenc}
+%\usepackage{courier}
+%\renewcommand{\familydefault}{\ttdefault}
+%\usepackage{euler} 
+
+
+\usepackage{amsmath} % to create a \cste operator 
+\usepackage{cancel}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts} 
+\usepackage{mathrsfs}
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage[colorlinks=true]{hyperref}
+\DeclareMathOperator{\cste}{cste}
+
+% les bras et les kets
+\newcommand{\bra}[1]{\langle\,#1\,|}
+\newcommand{\ket}[1]{|\,#1\,\rangle}
+\newcommand{\braket}[2]{\ensuremath{\langle\, #1 \mid  #2\, \rangle }}
+\newcommand{\moy}[1]{\langle\,#1\,\rangle}
+\newcommand{\vac}{\mathrm{vac}}
+\newcommand{\zero}{\mathbb{0}}
+%Prop, def, theo cadre maths:
+\newtheorem{theo}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{preuve}{Proof}[section]
+\newtheorem{rem}{Remark}[section]
+\newtheorem{cdt}{Condition}[section]
+\title{Integrable spin chains}
+\author{Guillaume Corlouer}
+
+\begin{document}
+\begin{titlepage}
+
+\begin{center}
+ECOLE NORMALE SUPERIEURE\hspace*{\stretch{1}} M2 physique theorique
+
+ \hspace*{\stretch{1}} Internship report , english version
+\end{center}
+
+\vspace*{\stretch{1}} % ressort vertical de force 1
+
+\begin{center}\bfseries\Huge
+Integrable spin chains
+\end{center}
+
+\vspace*{1cm} % espace vertical de 1cm
+
+\begin{center}\bfseries\Large
+Guillaume Corlouer
+\end{center}
+
+\vspace*{1cm}
+
+\begin{center}\bfseries\Large
+LPTMS
+\end{center}
+\vspace*{1cm}
+
+\begin{center}
+Supervisor: Veronique Terras
+\end{center}
+\vspace*{\stretch{2}} % ressort vertical de force 2
+
+\begin{center}
+The $26^{th}$ of september 2014
+\end{center}
+
+\end{titlepage}
+
+
+\begin{abstract}
+In this report we investigate the exact solvability of quantum spin chains.
+First we will see how to diagonalize the Hamiltonian of the XXX and XYZ Heisenberg 1/2 spins chain in the frame of the algebraic Bethe anstatz and the separation of variables methods. Both methods are based on the study of abelian symetries of the model in finite volume.
+
+Then we will see how to compute the correlations functions of these model in the frame of the algebraic Bethe ansatz. We will explain how to compute form factors, that also correspond to the matrices elements of the local operators of the chain. This computation lies in the heart of the inverse scaterring problem in one hand and the computation of Bethe scalar product in the other hand.
+
+Finally we will tackle a model in which the algebraic structures are more technical, the solid on solid model. This one is very usefull to solve because we learn so many things from it, the next step being the 8 vertex model equivalent to the fully anisotropic spin chain : the XYZ spin chain.
+
+
+
+
+
+
+
+%Dans ce rapport de stage on présente une méthode de résolution exacte appliquée aux chaînes de spin. Nous verrons comment on peut diagonaliser le Hamiltonien des chaîne XXX et XXZ à partir de l'ansatz de Bethe algébrique, version algébrique de l'ansatz de Bethe coordonnée. On présente également la méthode de séparation des variables qui constitue une alternative pour effectuer cette diagonalisation.
+
+%Dans un second temps on exhibera un calcul des valeurs moyennes et les fonctions de corrélation des opérateurs locaux de ces chaînes de spin en résolvant le problème de diffusion inverse dans le cadre de la méthode de diffusion inverse quantique joint à un calcul de produits scalaire.
+
+%Enfin on aborde le modèle solid-on-solid, relié au cas de la chaîne XYZ, dont la résolution algébrique est plus complexe mais pour lequel on peut appliquer les méthodes présentées précédemment.
+\end{abstract}
+
+
+
+
+
+\pagebreak
+\tableofcontents
+\pagebreak
+\section{General introduction.}
+
+In order to understand phenomenon whose mathematical description is complex it can be usefull to consider simpler models that  contains a lot of symmetries and idealize a physical situation. This is the case of integrable models where we can build analytical solutions that characterize the dynamics of a model. The notion of integrability is intimately linked to that of symmetry considering the definition given by Liouville in Hamiltonian mechanics. In the frame of this theory a system is said to be integrable if one can exhibit 2N conjugated canonical variables that form a Poisson abelian algebra, which spans a phase space of dimension 2N. Then it will be possible to work out this algebra inorder to simplify the equations of the dynamics, for example using the method of separation of variables to obtain solution of some differential equations. %Notre capacité à résoudre exactement un modèle dépend f
+
+In quantum mechanics and quantum field theory there is no consensus to define quantum integrability \cite{CauM10u}. Indeed we rather talk about exactly solvable models, ie when in a given theory, we have diagonalized the Hamiltonian and computed the mean values ​​of observables and their correlation functions. 
+In the 70 the work of Faddev, Sklyanin and Takhtajan (\cite{FadT81}, \cite{FadST79}, \cite{Skl82}) gave birth to unified algebraic structures, including ideas from Baxter (\cite{Bax82L}), which proved themselves very useful. First to solve exactly models of statistical physics, quantum mechanics and quantum field theory, such as the Heisenberg spin chain, the 6 vertex model or the Sine-Gordon model and secondly to create a whole class of exactly soluble models like the Heisenberg spin chain in spinor representation of dimension greater than 2. 
+These algebraic methods are now best known as the quantum inverse scattering method or algebraic Bethe ansatz, which is the algebraic version of the coordinate Bethe ansatz initially used to solve the model of the XXX-XXZ spin chain $ \frac{1}{2} $ \cite{Bet31}. 
+In this report, we present the algebraic Bethe ansatz % by adopting a matrix $ R $ solution of the equation 
+and will carry out the diagonalization of the Hamiltonian using the example of the XXX-XXZ $ \frac{1}{2} $ spin chains. Then we will present a complementary method introduced by Sklyanin: the separation of variables method also called functional Bethe ansatz. Of course once one has obtained the eigenstates of the Hamiltonian, it is very interesting to compute the mean values ​​of observables and their correlation functions, we'll see how to do it, combining  the resolution of the inverse scattering problem with the determinant representation of scalar products. We will stay in the relatively simple cases of XXX and XXZ $ \frac{1}{2} $ spin chains  at zero temperature. 
+Finally we will tackle a more recent model: the solid-on-solid model (SOS) for which the so called Yang-Baxter equation is replaced by the dynamical Yang-Baxter equation inducing algebraic difficulties to carry the computation of correlation functions. 
+\pagebreak
+\section{The example of the Heisenberg spin chain.}
+
+
+
+%Pour comprendre certains phénomènes dont la description mathématique est compliquée, il peut être utile de considérer des modèles plus simples comportant de nombreuses symétries et idéalisant une situation physique. C'est le cas des modèles intégrables où l'on peut construire des solutions analytiques caractérisant la dynamique d'un modèle. La notion d'intégrabilité est intimement à celle de symétrie si l'on considère la définition donnée par Liouville  en mécanique hamiltonienne. En effet dans le cadre de cette théorie un système est dit intégrable si on peut exhiber N intégrales premières du mouvement indépendantes formant une algèbre de poisson abélienne, pour un espace des phases de dimension 2N. Il nous sera ensuite possible d'exploiter cette algèbre afin de simplifier les equations de la dynamique, par exemple en utilisant la méthode de séparation des variables pour obtenir certaines solutions d'équation différentielles.% Puisque à une symétrie donnée est associée un groupe de symétrie, l'étude des représentations des groupes de symétrie d'un système physique peut également nous permettre d'analyser plus simplement les équations du système. Par exemple en mécanique quantique l'état de  spin d'une particule se transforme sous les représentations irréductibles de $SU(2)$ . %Grâce aux travaux d'Emy Noether on sait désormais que ses symétries impliquent des lois de conservations des observables.%
+
+%Néanmoins notre compréhension de l'intégrabilité en mécanique quantique est encore insatisfaisante bien que certaines définitions soient suggérés, la définition donnée par Liouville ne se généralise pas naïvement en remplaçant les crochets de Poisson vers les crochets de Lie des observables []. Nous adoptons alors une attitude pragmatique en se contentant de dire  qu'un système est intégrable lorsque l'on a été capable de trouver l'ensemble complet des états propres de l'hamiltonien et de mener à bien le calcul des facteurs de forme, c'est à dire les éléments des matrices associées aux opérateurs des observables exprimées dans la base complète d'états propres de l'hamiltonien, et des fonctions de corrélations associées aux interactions entre les observables locales du système considéré.
+
+%L'ansatz de Bethe algébrique fut développée dans les année 70 pour expliciter des solutions de modèles de physique statistique et  quantique. A partir de la relation de commutation fondamentale du modèle, ou équation de Yang-Baxter, qui nous intéresse on va générer une algèbre abélienne d'opérateurs à partir desquels on sera en mesure de former l'espace des états propre de l'hamiltonien et d'engendrer les quantités conservées de la théorie. Ces états propres seront construits par des opérateurs jouant le rôle d'opérateurs de création et d'annihilation lorsqu'ils sont appliqués sur les états du systèmes. On s'intéressera particulièrement aux cas des chaînes de spin XXX et XXZ lorsque les opérateurs de spin sont exprimés dans la représentation fondamentale de spin $\frac{1}{2}$ de Sl(2). La méthode de l'ansatz de Bethe algébrique généralise l'ansatz de Bethe coordonnée qui  permit à Bethe de connaître les fonctions d'ondes propres de l'hamiltonien de la chaîne de spin XXX. La force de la méthode de Bethe algébrique réside dans sa généralisation à des spins arbitraires et son application à d'autre systèmes intégrables de physique statistique pour le modèle à 8 vertex par exemple, ou encore pour le modèle  de Sine Gordon en théorie des champs dans la limite continue []. Comme nous le verrons cette méthode présente quelques inconvénients, il n'est pas toujours aisé de prouver la complétude des états de Bethe et ceux-ci s'exprimant en fonction d'opérateurs d'échelle il est nécessaire de supposer l'existence d'un état fondamental. Pour pallier à ces points parfois délicats la méthode de séparation des variables, ou ansatz de Bethe fonctionnelle, introduite par Sklyanin incarne un traitement complémentaire à la méthode de Bethe algébrique comme nous le verrons puisque ces conditions ne sont plus nécessaire au procédé de diagonalisation de l'hamiltonien.
+
+
+We define the Hamiltonian of the spin chain for N interacting spins with their nearest neighbour by:
+\begin{equation}
+H=\sum_{n=0}^{N}\left[J_{x}\sigma_{n}^{x}\sigma_{n+1}^{x}+J_{y}\sigma_{n}^{y}\sigma_{n+1}^{y}+J_{z}(\sigma_{n}^{z}\sigma_{n+1}^{z}-1)\right]
+\end{equation}  
+The dimensionless coupling constants define the various chains that we will meet in this report:
+\begin{itemize}
+\item The XXX chain refers to the anisotrpic case ie when: $J_{x}=J_{y}=J_{z}=1 $. Bethe solved this case when he diagonalized the Hamiltonian thanks to his Anstaz on the waves functions associated to the eigen values of $H$. 
+\item $J_{x}=J_{y}=1 \neq J_{z}$ stands for the XXZ spin chain solved by Orbach \cite{Orb58} using the so called coordinate Bethe ansatz. We will see that the algebraic Bethe Ansatz allows us to diagonalize the two previous Hamiltonian at the same time.
+\item $J_{x}\neq J_{y}$ and $ J_{x}\neq J_{z}$ corresponds to the case of the XYZ chain that can not be solved directly by means of the algebraic Bethe ansatz but Baxter solved these case \cite{Bax73}. The computation of the correlation functions of this model is still a wide open problem. We will present the SOS model connected to this one by a transformation called Vertex-interaction-round-to-face (RFID) and in which one can apply the algebraic Bethe ansatz and carry out the computation of correlation functions.
+\end{itemize}
+We will allways consider the $\frac{1}{2}$ spinor representation. Then the $\sigma^{x,y,z}$ operators are represented by the Pauli matrices. We define an Hilbert space $H_{n}$ to each site of the spin chain, so the full Hilbert space of the chain is  $\overset{N}{\underset{n=0}{\bigotimes}} H_{n}$.
+To simplify notations, the operators will carry indices that correspond to the spaces on which they act non trivially, for example : $\widehat{\sigma}^{z}_{n}=I\otimes ..I\otimes\sigma^{z}_{n}\otimes I \otimes..\otimes I$. We will also consider the case of the spin chain with periodic boundary conditions: $\sigma^{\alpha}_{N+1}=\sigma^{\alpha}_{1} \quad \alpha \in \{z,+,-\}$.
+\subsection{The Yang-Baxter algebra}
+
+Let us define the quantum Lax operator,  $L_{an}\in End(V_{a}\otimes H_n)$ , which is the quantum equivalent of the classical Lax operator, it is a scattering operator of the chain depending on a spectral parameter: $\lambda \in \mathbb{C} $ %sens physique 
+where $V_{a}$ is a $\mathbb{C}$-auxiliary vector space of dimension 2.
+
+This Lax operator satisfies a fundamental commutation relation:
+\begin{equation}
+R_{a_{1}a_{2}}(\lambda ,\mu)L_{a_{1}n}(\lambda )L_{a_{2}n}(\mu )=L_{a_{2}n}(\mu)L_{a_{1}n}(\lambda )R_{a_{1}a_{2}}(\lambda ,\mu )
+\end{equation}
+The matrix $R\in End(V_{a_{1}}\otimes V_{a_{2}})$ is a solution of the Yang-Baxter equation in 
+ $V_{a_{1}}\otimes V_{a_{2}}\otimes V_{a_{3}}$ :
+ \begin{equation}
+ R_{a_{1}a_{2}}(\lambda,\mu)R_{a_{1}a_{3}}(\lambda,\nu)R_{a_{2}a_{3}}(\mu ,\nu)=R_{a_{2}a_{3}}(\mu,\nu)R_{a_{1}a_{3}}(\lambda,\nu)R_{a_{1}a_{2}}(\lambda,\mu)
+\end{equation}
+
+%Il faut savoir qu'à une matrice R peut correspondre plusieurs systèmes intégrables, par exmple la chaîne XXZ et le modèle de sine-Gordon possèdent la même matrice R. 
+Let us define the monodromy matrix by:
+\begin{equation}
+T_{a;1..N}(\lambda)=L_{aN}(\lambda)....L_{a1}(\lambda)
+\end{equation}
+
+%definir en fonction des paramètre d'inhomogénéité et matrice R, à clarifier.
+Applying inductivly the lax operators, the fundamental commutation relation becomes:\begin{equation}
+R_{a_{1}a_{2}}(\lambda,\mu)T_{a_{1}}(\lambda)T_{a_{2}}(\mu)=T_{a_{2}}(\mu)T_{a_{1}}(\lambda)R_{a_{1}a_{2}}(\lambda,\mu)
+\end{equation}
+
+This equation is essential because it will allow us to generate an operator algebra $A_r$ called Yang-Baxter algebra, which contains an abelian subalgebra that contains the Hamiltonian. The other generators of this algebra (which does not belong to the Abelian subalgebra previously mentioned), are used to construct the eigenstates. The Yang-Baxter algebra is closely related to the notion of quantum group, resulting from the work of Jimbo \cite {Jim92} and Drinfeld \cite{Dri87}.
+
+Thanks to the trace of the monodromy matrice on the auxiliary space we can obtain the transfer matrix $$\tau(\lambda)=tr_{a}T(\lambda)$$
+
+If we apply the trace to the fundamental commutation relation of the monodromy matrices we obtain that all transfert matrices commute using the cyclicity of the trace.
+\begin{equation}
+[\tau(\lambda),\tau(\mu)]=0
+\end{equation}
+This is the maximal abelian subalgebra of $A_{R}$ which is the quantum equivalent of the Poisson algebra in classical integrable models. Thus the transfer matrix is a generating function of the conserved quantities of the model. 
+
+The Lax operator is such that the following trace identity holds:
+\begin{equation}
+H=\sum_{k,a} c_{ka}\frac{d^k}{d\lambda^k}\ln\tau(\lambda)_{|_{\lambda=\mu_{a}}}
+\end{equation}
+this ensures that the Hamiltonian commutes with the transfer matrix, it follows that they have a common basis of eigenstates thus to diagonalize H is equivalent to diagonalize the transfer operator. The goal of the algebraic Bethe ansatz is to generate an algebra whose generators are the elements of the monodromy matrix and to look for conditions such that the states generated by the creation operators become eigenstates of the transfer matrix. We then obtain constraints on spectral parameters: they must satisfy the Bethe equations (33).
+
+\subsection{Transfer matrix diagonalization.}
+
+Since local operators are expressed in representation of spin $ \frac{1}{2} $ the Hilbert space associated with a site of the chain is 2-dimensional, as well as auxiliary spaces. It is also possible to perform the calculations in higher dimensional representations \cite{Fad82}.
+
+We define the Lax operator associated to the Hamiltonian H of the chain on a site n by:
+
+%\begin{equation}
+%L_{na}(\lambda)=\lambda I_{n} \otimes I_{a} + i\sum_{\alpha}S_{n}^\alpha \otimes \sigma^\alpha
+%\end{equation}
+
+
+\begin{equation}
+L_{an}= \begin{pmatrix}
+\phi(\lambda+\theta S_{n}^z) & \phi(\theta) S_{n}^{-} \\
+\phi(\theta) S_{n}^{+} & \phi(\lambda-\theta S_{n}^{z}) 
+\end{pmatrix}
+\end{equation}
+
+	$\phi(\lambda)=\lambda$ pour la chaîne XXX \\
+	$\phi(\lambda)=\sinh(\lambda)$ pour la chaîne XXZ 
+
+The parameter $\theta$ is linked to the anisotropy term in the XXZ chain such that $J_{z}=cosh(\theta)$. One can check that the Lax operator allows us to obtain a trace identity for the hamiltonian of the model. Indeed the Lax operator taken in $\frac{\theta}{2}$ is proportional to a permutation operator between the auxiliary space and the Hilbert space associated to a given site. 
+Then one define a discrete translation operator along the chain: 
+\begin{equation}
+U=P_{1N}...P_{13}P_{12}
+= \phi(\theta)^{-N}\tau(\lambda)_{|_{\frac{\theta}{2}}}
+\end{equation}
+
+If we express the hamiltonian as a function of permutation operators of the space of the chain and differentiate the transfer matrix with respect to $\lambda$ we discover a trace identity:
+
+\begin{equation}
+H=2\phi(\theta)\frac{d}{d\lambda}\ln\tau(\lambda)_{|_{\frac{\theta}{2}}}-2\phi'(\theta)N
+\end{equation}
+Here is the R matrix that satisfies the Yang Baxter equation for the XXX and XXZ spin chains:
+\begin{equation}
+R(\lambda,\mu)=\begin{pmatrix}
+1 & 0 & 0 & 0 \\
+0 &  b(\lambda,\mu) & c(\lambda,\mu) & 0 \\
+0 & c(\lambda,\mu) &  b(\mu,\lambda) & 0 \\
+0 & 0 & 0 & 1 \\
+\end{pmatrix}
+\end{equation}
+
+where \begin{equation}
+b(\lambda,\mu)=\frac{\phi(\lambda-\mu)}{\phi(\lambda-\mu+\theta)}\qquad c(\lambda-\mu)=\frac{\phi(\theta)}{\phi(\lambda-\mu+\theta)} 
+\end{equation}
+One should know that to a R matrix  may correspond several integrable systems, this is the case for the XXZ spin chain and the Sine-Gordon model. With the difference that for the XXZ chain, the operator $ R_ {an} $ is proportional to $ L_ {an} $, thus providing a model called fundamental. This is not the case for the Sine-Gordon model where the representation is different. 
+We define the monodromy matrix (4) in $End  (V\otimes  H )$ by: 
+\begin{equation}
+T(\lambda)=\begin{pmatrix}
+A(\lambda) & B(\lambda)\\
+C(\lambda) & D(\lambda) \\
+\end{pmatrix}
+\end{equation}
+
+A,B,C et D are operetaors depending on product of local operators of the chain.
+The Yang Baxter equation take the following form : 
+
+\begin{equation}
+R(\lambda,\mu)(T(\lambda)\otimes Id)(Id\otimes T(\mu))=(T(\mu)\otimes Id)(T(\lambda)\otimes Id) R(\lambda,\mu)
+\end{equation}
+
+
+
+One generates the Yang Baxter algebra spanned by the operators from the previous equation. Here we give some of the commutations relations, the most usefull for what follows. 
+\begin{align}
+&[B(\lambda),B(\mu)]=0\qquad [C(\lambda),C(\mu)]=0\\
+&[A(\lambda),A(\mu)]=0\qquad [D(\lambda),D(\mu)]=0\\
+&A(\lambda)B(\mu)=c(\lambda,\mu)A(\mu)B(\lambda)+b(\lambda,\mu)B(\mu)A(\lambda)\\
+&D(\mu)B(\lambda)=b(\lambda,\mu)B(\lambda)D(\mu)+c(\lambda,\mu)D(\lambda)B(\mu)\\
+&C(\lambda)D(\mu)=c(\lambda,\mu)C(\mu)D(\lambda)+b(\lambda,\mu)D(\mu)C(\lambda)\\
+&C(\mu)A(\lambda)=b(\lambda,\mu)A(\lambda)C(\mu)+c(\lambda,\mu)C(\lambda)A(\mu)\\
+&[C(\lambda),B(\mu)]=c(\lambda,\mu)b(\lambda,\mu)^{-1}[A(\lambda)D(\mu)-A(\mu)D(\lambda)]
+\end{align}
+%L'étude des chaînes XXX et XXZ se réduit donc à celle des représentations de cette algèbre.
+Note that in  (16) and (17), the product of A or D with B induce a direct term and an exchange term in the spectral parameters.
+The transfert matrix become:
+\begin{equation}
+\tau(\lambda)=A(\lambda)+D(\lambda)
+\end{equation}
+
+Thus to construct the eigenstates of $ \tau $ is equivalent to build the eigenstates of the sum of A with D. We need to exhibit a reference state that will be the highest weight vector of the representation of the previous algebra . In the particular case of the chain that we are studying  this condition exists, physically it corresponds to the case in which the order is maximal, ie when all the spins are oriented upwards.
+\begin{equation}
+|0\rangle=\overset{N}{\underset{n=0}{\otimes}}|\uparrow\rangle_{n}
+\end{equation}
+
+%L'existence d'un tel état n'est pas toujours acquise, on verra par exemple qu'il n'y en a pas dans le cas du modèle à 8 vertex.
+%'est l'un des points faibles de l'ansatz de Bethe algébrique par rapport à la méthode séparation des variables que l'on présentera plus loin.
+
+We choose the reference state such that:
+\begin{align}
+&A(\lambda)|0\rangle = a(\lambda) |0\rangle\quad &D(\lambda)|0\rangle=d(\lambda)|0\rangle\\
+&B(\lambda)|0\rangle\neq 0 				\quad &C(\lambda)|0\rangle=0
+\end{align}
+Where:  
+\begin{equation}
+a(\lambda)=\prod_{j=1}^{N}\phi(\lambda+\frac{\theta}{2}) \qquad d(\lambda)=\prod_{j=1}^{N}\phi(\lambda-\frac{\theta}{2})
+\end{equation}
+Let us apply B as a creation operator and C as an annihilation operator in order to span the space of states where an arbitrary vector of the representation will be given by: 
+\begin{equation}
+|\psi(\{\lambda\})\rangle=\prod_{i=1}^{N}B(\lambda_{i})|0\rangle
+\end{equation}
+Which we can also see as a N particules symetric state.
+
+Applying A and D on this state and using the commutation relations of these operators with B in order to make them act on the ground state we obtain :
+
+\begin{equation}
+A(\mu)\prod_{i=1}^{N}B(\lambda_{i})|0\rangle=\Lambda\prod_{i=1}^{N}B(\lambda_{i})|0\rangle+\sum_{k=1}^{N}\Lambda_{k} B(\mu) \prod_{\substack{i=1\\ i\neq k}}^{N}B(\lambda_{i})|0\rangle
+\end{equation}
+\begin{equation}
+D(\mu)\prod_{i=1}^{N}B(\lambda_{i})|0\rangle=\widetilde{\Lambda}\prod_{i=1}^{N}B(\lambda_{i})|0\rangle+\sum_{k=1}^{N}\widetilde{\Lambda}_{k} B(\mu) \prod_{\substack{i=1\\ i\neq k}}^{N}B(\lambda_{i})|0\rangle
+\end{equation}
+with
+
+\begin{equation}
+\Lambda=a(\mu)\prod_{i=1}^{N}b^{-1}(\lambda_{i},\mu)\qquad \Lambda_{k}=a(\lambda_{k})\frac{c(\mu,\lambda_{k})}{b(\mu,\lambda_{k})}\prod_{\substack{i=1\\ i\neq k}}^{N}b^{-1}(\lambda_{i},\lambda_{k})
+\end{equation}
+\begin{equation}
+\widetilde{\Lambda}=d(\mu)\prod_{i=1}^{N}b^{-1}(\mu,\lambda_{i})\qquad \widetilde{\Lambda}_{k}=d(\lambda_{k})\frac{c(\lambda_{k},\mu)}{b(\lambda_{k},\mu)}\prod_{\substack{i=1\\ i\neq k}}^{N}b^{-1}(\lambda_{k},\lambda_{i})
+\end{equation}
+
+We deduce a necessary condition for  $|\psi(\{\lambda_{k}\})\rangle$ to be an eigenvector of the transfer matrix:
+\begin{equation}
+\forall k\in [1,2,..,N] \qquad \Lambda_{k}+\widetilde{\Lambda}_{k}=0
+\end{equation}
+
+We then deduce the Bethe equations : 
+\begin{equation}
+\forall k \in [1,2,..,N]\qquad \frac{a(\lambda_k)}{d(\lambda_k)}\prod_{\substack{i=1\\ i\neq k}}^{N} \frac{b(\lambda_{k},\lambda_{i})}{b(\lambda_{i},\lambda_{k})}=1
+\end{equation}
+
+Which prooves the following theorem :
+\begin{theo}
+
+If $\{\lambda_{k}\} $ is a set of solutions of the Bethe equations then the Bethe state  $|\psi(\{\lambda_{k}\})\rangle$ is an eigenstate of the transfer matrix  $\tau(\mu)$ for all $\mu$ associated to the eigenvalue:
+\begin{equation}
+t(\mu,\{\lambda_{k}\})=a(\mu)\prod_{i=1}^{N}b^{-1}(\lambda_{i},\mu)+d(\mu)\prod_{i=1}^{N}b^{-1}(\mu,\lambda_{i})
+\end{equation}
+\end{theo}
+
+
+\begin{rem}
+To ensure that we did determine all eigenvectors one should proove that the Bethe states do form a complete basis of eigenvectors ​​of the transfer matrix. One may refer to Bethe \cite{Bet31} who compared the number of independent solutions of the Bethe equations  and found that they fit with the dimension of the Hilbert space of the chain using the string assumption. %d'autres méthodes plus modernes.
+\end{rem}
+
+\begin{rem}
+Note also that we could have made a similar computation for dual-particle states, this time with the operator $ C(\lambda) $ as the creation operator acting on the dual space of the states $ |\phi({\lambda})\rangle $. The left eigenvalues of the transfer matrix ​​would have been the same. Assuming that the eigenstates of the transfer matrix are not degenerate states this fact implies that distinct states of Bethe are orthogonal.
+\end{rem}
+
+\begin{rem}
+$\lambda\to A(\lambda)$ and $\lambda\to D(\lambda) $ are smooth functions and so are their eigenfunctions. So when $\mu \to \lambda_{i}$ the resid at the pole of the eigenfunction of the transfert matrix is zero and we get back to the Bethe equations.
+\end{rem}
+%limite thermo a voir avec verro!
+We will present another method to obtain the eigenstates of the transfert matrix. The so called separation of variables also defined as the functional Bethe Ansatz introduced by Sklyanin. \cite{Skl79},\cite{Skl90},\cite{Skl90}.
+
+\subsection{Functional Bethe ansatz}
+
+The classical method of the separation of variables allows us to find solutions of differential partial differential equation. For example it allows us to solve the Schrödinger equation for a free particle with periodic boundary conditions. In general, we try to reduce the problem of difference of spectral operators in a multidimensional system into  a system of one-dimensional equations. Sklyanin explains, starting from the Yang-Baxter algebra, how it is possible to reduce the the eigenvalues equations ​​of the transfer matrix into a set of one-dimensional equations where functions depend on several spectral parameters. 
+
+Unlike the algebraic Bethe ansatz, the system does not need any reference state and one is freed from the constraint of the proof of the completeness of the Bethe states as we shall see. 
+
+To simplify the discussion, we focus on the case of the periodic XXX chain, the monodromy matrix is a polynomial of order N in the spectral parameter $u$:
+
+%$$T(u)=\sum_{n=0}^{N} u^{n} T_{n} $$
+   
+\begin{equation}
+T(u)=\sum_{n=0}^{N} u^{n} T_{n} \qquad
+T_{n}= \begin{pmatrix}
+A_{n} & B_{n}\\
+C_{n} & D_{n} \\
+\end{pmatrix}
+\end{equation}
+Where the elements of $ T_ {n} $ are product operators of local operators. In the case of the XXZ chain one should consider trigonometric polynomials. The fact that the operators B commute ensure that the roots of B provide a convinient separation of variables, as we shall see below. We will then imposed four conditions that ensure that the spectrum of B (u) is simple and that also that ir can be expressed as a splitted polynomial. We will exhibit an isomorphism between the set of symmetric polynomials of the root operators and the spectrum of the coefficients of the unitary polynomial B. 
+Let $ \Delta $ be the quantum determinant defined by $$ \Delta(T (u)) = D (u) A (u + \theta)-B (u) C (u + \theta) $$on can check that it satisfies the usual properties of a determinant using the commutation relations of the elements of $ A_ {R} $ and thus that it is a central element of the algebra.
+
+\begin{cdt}
+The leading coefficient of $T_{N}$ is a matrix whose entries are complex numbers and the quantum determinant of the monodromy matrix is a function on $\mathbb{C}$.
+\end{cdt} %intérêt de cdt?
+\begin{cdt}
+$B_{N}\neq 0$ and the quantum determinant of $T_{N}$ is nul.
+\end{cdt}
+This condition ensures that $B(u)$ and $\Delta(u)$ are polynomial of degree N and 2N. 
+
+We define the operators $\widehat{b}_{n}=(-1)^{n}\frac{B_{N-n}}{B_{n}} \qquad n=1,..,N$ such that 
+\begin{equation}
+B(u)=B_{N}(u^{N}-\widehat{b}_{1}u^{N-1}+\widehat{b}_{2}u^{N-2}-...)	
+\end{equation}
+\begin{cdt}
+Let  $$\mathbb{B}=Spec\{\widehat{b}_{n}\} \qquad n=1,..,N$$ 
+The operators $\{\widehat{b}_{n}\}$ have a complete set of common eigenfunctions and to any point 
+$b=(b_{1},b_{2},..,b_{n})\in B\subset \mathbb{C}^{N}$ coresponds a unique eigenfunction. %reflechir un peu plus
+\end{cdt}
+
+This condition ensures that the representation space $W$ of the Yang-Baxter algebra is isomorphic to the space of functions on $\mathbb{B}$.
+Let:
+$$\begin{array}{ccccc}
+\Theta & : & \mathbb{C}^{N} & \to & \mathbb{C}^{N} \\
+ & & x=(x_{1},..,x_{N}) & \mapsto & b(x)=(s_{1}(x),..,s_{N}(x)) \\
+\end{array}$$
+%appendice polynomes symsssssssssssssssssssssssssssssssssssssssss
+Where $s_{n}(x)$ are the symmetric polynomials associated to the coefficients  $b_{n}$ which depends on the eigenvalues of the root operators B(u) denoted by  $x_{n}\in Spec\{\widehat{x}_{n}\}=X$.
+\begin{cdt}
+$X=\Theta^{-1}(\mathbb{B})$ does not contain multiple point, in other words to any  $b\in\mathbb{B}$ correspond exactly $N!$ pre images since an elementary symmetric polynomial is invariant under the permutation of its variables.
+\end{cdt}
+Thus $\Theta$ induce an isomorphism between the representation space and the space of symmetric functions on
+$X=\Theta^{-1}(\mathbb{B})$, ie : $$W\simeq Fun\mathbb{B} \simeq SymFunX$$
+Indeed if one defines an equivalence relation on X as the set of elements in X whose coordinates are permuted, the set of equivalence classes on X being defined as  $X/S_{N}$, one can define an isomorphism induced by  $\theta$ : $\varphi=\pi\circ\Theta^{-1} : X/S_{N}\to B$
+wher $\pi:X\to X/S_{N}$ is the canonical application from X to the set of equivalence classes formed by the elements in X whose coordinates are permuted, $\Theta$ being restricted to $X$ and corestricted to $\mathbb{B}$.
+All these conditions ensure that B(u) can be factorized into a splitted polynomial and the spectrum of its roots operators is simple: 
+\begin{equation}
+B(u)=B_{N}\prod_{n=0}^{N}(u-\widehat{x}_{n})
+\end{equation}  
+
+
+
+One can extend this ismorphism to the space of symmetric functions of the roots operators of B(u) instead of the one of symmetric functions. We have to do this in order to construct the irreducible representations of the algebra spanned by the roots operators of B(u). 
+Let
+\begin{equation}
+X_{n}^{+}=\sum_{p=0}^{N} x_{n}^{p}D_{p}=D(u)|_{x_{n}} \qquad X_{n}^{-}=\sum_{p=0}^{N} x_{n}^{p}A_{p}=A(u)|_{x_{n}}
+\end{equation}
+
+One construct an algebra  $A_{s}$ from the operators ${x_{n},X_{n}^{+},X_{n}^{-}}$ 
+
+\begin{equation}
+[x_{n},x_{m}]=0 \qquad [X_{n}^{+},X_{m}^{+}]=0 \qquad [X_{n}^{-},X_{m}^{-}]=0 \qquad [X_{n}^{+},X_{m}^{-}]=0 \qquad n\neq m
+\end{equation}
+
+\begin{equation}
+X_{n}^{\underset{-}{+}}x_{n}=(x_{n}\underset{-}{+}\theta\delta_{mn})X_{n}^{\underset{-}{+}} \qquad X_{n}^{\underset{-}{+}}X_{n}^{\underset{+}{-}}=\Delta(x_{n}\underset{-}{+} \frac{\theta}{2}) 
+\end{equation}
+%Où $\Delta$ est le déterminant quantique définie par $$ \Delta(T(u))=D(u)A(u+\theta)-B(u)C(u+\theta) $$ On peut vérifier en utilisant les relations de commutations des éléments de $A_{R}$ qu'il vérifie bien les propriétés usuelles du déterminant.
+The irreducible representations of this algebra will provide the seperation of variables.
+
+Let 
+\begin{equation}
+T_{aN}=KL_{aN}....L_{a1}
+\end{equation}
+where K is a coefficient such that  $ detK\neq 0$ and that B(u) is a polynomial of degree N, which is not the case for K=1. 
+Note also that we are not considering any more the case of periodic boundary conditions, but quasiperiodic boundary conditions.
+It is possible to define the space X spanned by the spectrum of all the roots operators of B. Let $|\Lambda_{n}|=2l_{n}+1$ with $l_{n}=(-\frac{n}{2},..,\frac{n}{2})$ such that:
+
+\begin{equation}
+X=\Lambda_{1}\times \Lambda_{2} \times .. \times \Lambda_{N}\qquad\Lambda_{i}=Spec({\widehat{x}_{n}})=(\lambda_{n}^{-},\lambda_{n}^{-}+\theta,..,\lambda_{n}^{+}-\theta,\lambda_{n}^{+}) 
+\end{equation} 
+Indeed in this case the functions  $\Delta_{n}^{+}$ et $\Delta_{n}^{-}$ define an irreducible representation of the previous algebra and are such that:
+\begin{equation}
+\Delta_{n}^{+}=\xi_{+}\prod_{n=0}^{N} (u-\lambda_{n}^{+}) \qquad \Delta_{n}^{-}=\xi_{-}\prod_{n=0}^{N} (u-\lambda_{n}^{-}) \qquad \xi_{+}\xi_{-}=detK
+\end{equation}
+We wish to solve the spectral problem: $$\tau(u)\varphi=(A(u)+D(u))\varphi=t(u)\varphi $$
+
+ According to (38) A(u) and D(u) can be computed using polynomial interpolation thus the eigenvalues equation reduced to a set of one dimendional equation depending on the $x_{n} \in Spec(X)$ :
+\begin{equation}
+t(x_{n})Q(x_{n})=\Delta_{n}^{+}(x_{n})Q(x_{n}+\theta)+\Delta_{n}^{-}(x_{n})Q(x_{n}-\theta)
+\end{equation}
+
+where $$\varphi(x_{1},..,x_{n})=\prod_{n=1}^{N} Q(x_{n}) $$ is the separation of variables and the functions  $Q_{n}$ depend on the  $\Lambda_{n}$.
+
+We have has a splitted a spectral problem into a N-dimensional set of N-dimensional equations. It is interesting to solve these  equations on $ Q_ {n} $ by induction numerically. Since we have exhibited an isomorphism between the space W and FunX each $Q_{n}$ solution of this problem is a spectral eigenstate of the transfer matrix. By construction, this isomorphism allows to deal directly with the problem of completeness of Bethe states, so this method presents an advantage with respect to the algebraic Bethe ansatz.  %remarque sur l'interpolation des polynômes par les Q....
+
+\section{Correlation functions of the operators.}
+Once the hamiltonian has been diagonalized, we wish to have access to the measurable quantities. They correspond to the correlation functions of the local operators of the chain acting on the ground state(s) $\ket{\psi_{g}}$ of the hamiltonian. We wish then to compute the quantity $\frac{\langle\psi_{g}|O|\psi_{g}\rangle}{\langle\psi_{g}|\psi_{g}\rangle} $ at zero temperature where O is an operator containing a product of local operators of the chain.
+Let consider for example the case of the 2 points correlation function with\\ $O=\sigma_{i}^{\alpha_i}\sigma_{i+1}^{\alpha_{i+1}} \quad \alpha_i \in\{+,-,z\} \quad i\in [1..N]$. The completness of Bethe states allows us to split the correlation function into a sum of matrices elements associated to the spin operators usually called form factors.
+\begin{equation}
+\langle\psi_{g}|O|\psi_{g}\rangle=\sum_{\ket{\psi_{B}}}\bra{\psi_{g}}\sigma_{i}^{\alpha_i}\ket{\psi_{B}}\bra{\psi_{B}}\sigma_{i+1}^{\alpha_{i+1}}\ket{\psi_{g}}
+\end{equation}
+
+Where $|\psi_{B}\rangle$ is a Bethe state. Thus we define the form factors of the sum by:
+\begin{equation}
+F_{N}(\sigma_{n}^{\alpha})=\langle 0|\prod_{k=0}^{N}C(\mu_{k}) \sigma_{n}^{\alpha} \prod_{j=0}^{N}B(\lambda_{j})|0\rangle  \qquad
+\alpha \in\{+,-,z\}
+\end{equation}
+where $\{\lambda_{j}\}$  and  $\{\mu_{k}\}$ are solutions of the Bethe equations.The action of $ \sigma_{n}^{\alpha} $ on the Bethe states is highly non-trivial. Indeed one has to know the action of a local operator of the chain on a product of non local operators that belong to the algebra $ A_ {R} $. To tackle this problem we will solve the inverse scattering problem in the framework of the quantum inverse scattering method. We will embed the local operators of the spin chain into the Yang Baxter algebra expressing them in terms of its generators. Thus the computation of form factors is reduced to the evaluation of the scalar product between two states which, as we shall see, can be represented as a determinant. One may refer to \cite{KitMT99}, \cite{Sla89}, \cite{MaiT00}.
+%Bien que ce sujet n'est pas exposé ici, les facteurs de forme présentent également un grand intérêt pour étudier le comportements des observables à la limite thermodynamique \cite{Yan52}.%ref
+% Mathématiquement la généralisation de l'ansatz de Bethe algébrique lorsque $N \to \infty$ pose des problèmes conceptuels par exemple l'espace de Hilbert devient de dimension infini, il faudrait alors définir un produit tensoriel infini d'opérateurs. En revanche on peut rigoureusement utiliser la limite thermodynamique sur les expressions que l'on a obtenu pour les facteurs de formes. %ref
+%En mécanique quantique on désire connaître les valeurs prises par les  observables dans l'espace de Hilbert, autrement dit on souhaite calculer les entrées des matrices de ces opérateurs exprimés dans la base des états propres du hamiltonien. Si le système étudié comporte également des interactions, les fonctions de corrélation, c'est à dire les éléments de produits d'opérateurs locaux donnant accès aux quantités physiques mesurables sont intéressantes à calculer.
+\pagebreak
+\subsection{Solving the inverse scattering problem into the frame of the quantum inverse scattering method}
+In this section we shall see how to embed the local operators of the chain into the Yang-Baxter algebra by solving the inverse scattering problem.
+
+  %On va exprimer les opérateurs locaux en fonctions des opérateurs de l'algèbre de Yang-Baxter afin de ramener le calcul des facteurs de forme à un calcul de produit scalaire que l'on va ensuite exprimer sous forme de déterminant. Ce calcul est réalisé dans [] où l'on a utilisé les twist de Drinfield permettant d'expliciter une  une base dans laquelle les opérateurs locaux s'expriment simplement en fonction des générateurs de l'algèbre. Cette base n'est pas nécessaire pour mener à bien le calcul des fonctions de  corrélations, les formules étant connues des raisonnements par récurrence suffisent à les démontrer.
+Let consider the non homogenous XXX spin chain whose monodromy matrix is defined by:
+\begin{equation}
+T_{0;1,..,N}(\lambda;\xi_{1},..,\xi_{N})=R_{0,N}(\lambda-\xi_{N})..R_{0,1}(\lambda-\xi_{1})=R_{0;1,..,N}(\lambda;\xi_{1},..,\xi_{N})
+\end{equation}
+
+With $\xi_{k}$ an homogeneity parameter of the site k. One can check that the monodromy matrix defined a representation of the fundamental commutation relation and that when all the  $\xi_{k}$ are equal, we go back to the homogenous chain.
+\begin{lemma}
+
+Let $U_{1}^{i}$ be the propagator form the site 1 to the site i of the chain.One can expressed it according to the following equations:
+\begin{equation}
+U_{1}^{i}=R_{i-1,i..N1..i-2} . . . R_{2,3..N1}R_{1,2..N}=\prod_{\alpha=1}^{i-1}(A_{1..N}(\xi_{\alpha})+D_{1..N}(\xi_{\alpha}))
+\end{equation}
+\end{lemma}
+
+$\xi_{\alpha}$ is such that $R_{0\alpha}(\xi_{\alpha})=P_{0\alpha}$
+
+
+%Tout d'abord vérifions que $U_{1}^{i}$ défini par la première égalité agit bien comme un opérateur de translation de la chaîne du site 1 au site i. Prenons le cas i=2: 
+%\begin{align*}
+%U_{1}^{2}=R_{1;2..N}(\xi_{1}) & =R_{1;N}(\xi_{1},\xi_2)..R_{1;2}(\xi_{1},\xi_2)\\
+          %                     &=P_{01}P_{01}^{-1}R_{1;N}(\xi_{1},\xi_2)P_{01}P_{01}^{-1}..P_{01}P_{01}^{-1}R_{1;2}(\xi_{1},\xi_N)P_{01}P_{01}^{-1}\\
+                        %       &=P_{01}R_{0N}(\xi_N)..R_{02}(\xi_2)P_{01}^{-1}
+%\end{align*}
+%Il s'agit d'un opérateur de permutation cyclique  tel que $\sigma(i)=i+1$ pour tout site i et pour $\sigma\in S_{N}$ le groupe symétrique d'ordre N. Donc si on fait agir le propagateur sur un élément de la matrice de monodromie $X_{1,..,N}$ sous l'effet de cette permutation on constate  que l'on obtient bien la translation du site 1 au site 2: $$U_{1}^{2}X_{1,..,N}=X_{\sigma(1),\sigma(2)..,\sigma(N)}U_{1}^{2}=X_{2,3..,N,1}U_{1}^{2}$$
+%Ce résultat se généralise par récurrence,en faisant agir consécutivement les éléments du groupe de translation des sites de la chaîne de spin 
+One can check that the operator $U_{j-1}^{j}=R_{j-1,j..N1..j-2}$ and  $U_{1}^{i}X_{1..N}U_{i+1}^{1}=X_{i..N1..i-1}$, such that $U_{1}^{i}=\prod_{j=2}^{i}U_{j-1}^{j}$,  defines a translation operator along the sites of the chain (one use repeatidly the Yang-Baxter equation)(38)\cite{MaiT00}.\\ We show the second equality: \\
+A+D is the trace of the monodromy matrix on the auxiliary space.We use $R_{0\alpha}(\xi_{\alpha})=P_{0\alpha}$, and let the permutation operator acting on R : $P_{0\alpha}R_{0k}(\xi_{\alpha})P_{0\alpha}^{-1}=R_{\alpha k}(\xi_{\alpha})$ $\forall k $
+Finally we use the cyclicity of the trace: 
+$tr_{0}(P_{0\alpha})=1$:
+\begin{align*} 
+A_{1..N}(\xi_{\alpha})+D_{1..N}(\xi_{\alpha})& =tr_{0}(R_{0N}(\xi_{\alpha})..R_{0\alpha+1}(\xi_{\alpha})R_{0\alpha}(\xi_{\alpha})R_{0\alpha-1}(\xi_{\alpha})..R_{01}(\xi_{\alpha}))\\
+& =tr_{0}(R_{0N}(\xi_{\alpha})..R_{0\alpha+1}(\xi_{\alpha})P_{0\alpha}R_{0\alpha-1}(\xi_{\alpha})..R_{01}(\xi_{\alpha})) \\
+& =R_{\alpha\alpha-1}(\xi_{\alpha})..R_{\alpha 1}(\xi_{\alpha})R_{\alpha N}(\xi_{\alpha})..R_{\alpha \alpha +1}(\xi_{\alpha})\\ 
+& =U_{\alpha}^{\alpha+1}
+\end{align*}
+The product of this operator for  $\alpha$ going from 1 to i-1 prooves the result.
+
+
+%Etant donné que $U_{1}^{1}=Id$ On vérifie aisément en utilisant les propriétés précédentes que l'inverse de $U_{1}^{i}$ s'écrit:
+%\begin{equation}
+%U_{i+1}^{1}=\prod_{\alpha=i+1}^{N}(A_{1..N}+D_{1..N})(\xi_{\alpha})
+%\end{equation}
+
+
+%En faisant agir ce propagateur sur les opérateurs locaux de la chaîne de spin, on constate que  $U_{1}^{i}$ agit bien comme un opérateur de translation du site 1 vers le site i. Plus précisément:
+%\begin{equation}
+%U_{1}^{i}X_{1..N}U_{i+1}^{1}=X_{i..N1..i-1}
+%\end{equation}
+
+%Où $X\in A_{R}$\\
+Now we are able to express the local operators as functions of the generators of the Yang-Baxter algebra.
+\begin{theo}
+Let $E_{k}^{ij}$ be an elementary matrix associated to the Hilbert space at the site k.
+It depends on elements of the monodromy matrix $T_{ij}(\xi_k)$ as:
+
+\begin{equation}
+E_{k}^{ij}=\prod_{\alpha=1}^{k-1}(A_{1..N}+D_{1..N})(\xi_{\alpha}) . T_{ij}(\xi_{k}) . \prod_{\alpha=1}^{k-1}(A_{1..N}+D_{1..N})^{-1}(\xi_{\alpha})
+\end{equation}
+%\begin{equation}
+%\sigma_{i}^{+}=\prod_{\alpha=1}^{i-1}(A_{1..N}+D_{1..N})(\xi_{\alpha}) . C(\xi_{i}) . \prod_{\alpha=i+1}^{N}(A_{1..N}+D_{1..N})(\xi_{\alpha}) 
+%\end{equation}
+
+%\begin{equation}
+%\sigma_{i}^{z}=\prod_{\alpha=1}^{i-1}(A_{1..N}+D_{1..N})(\xi_{\alpha}) . (A-D)(\xi_{i}) . \prod_{\alpha=i+1}^{N}(A_{1..N}+D_{1..N})(\xi_{\alpha})
+%\end{equation}
+\end{theo}
+ %tr_{0}(x_{0}R_{0,N}R_{0,N-1}(\xi_{i})...P_{0,i}(\xi_{i})...R_{0,1}(\xi_{i})) & =tr_{0}(P_{0i}R_{i,i-1}(\xi_{i})...R_{i,1}(\xi_{i})x_{i}R_{i,N}(\xi_{i})...R_{i,i+1}(\xi_{i})\\ &=U_{i+1}^{N}x_{i}U_{1}^{i-1}\\ & = \prod_{\alpha=i+1}^{N}(A_{1..N}+D_{1..N})(\xi_{\alpha}) . x_{i} . \prod_{\alpha=1}^{i-1}(A_{1..N}+D_{1..N})(\xi_{\alpha}) 
+For the sake of simplicity we will show that the theorem holds for a local operator acting on a boundary of the chain, at site 1, the proof is similar to the previous one :
+\begin{align}
+T_{ij} &=tr_{0}(E_{0}^{ij}T(\xi_{1}))=tr_{0}(E_{0}^{ij}R_{0N}(\xi_{1})..R_{02}(\xi_{1})P_{01})\\ 
+       &=E_{1}^{ij}tr_{0}(R_{0N}(\xi_{1})..R_{02}(\xi_{1})P_{01})=E_{1}^{ij}(A+D)(\xi_{1})
+\end{align}
+The result generalizes for a local operator at any site k.
+\begin{equation}
+tr_{0}(E_{0}^{ij}R_{0,N}(\xi_{k})R_{0,N-1}(\xi_{k})...P_{0,k}...R_{0,1}(\xi_{k}))=U_{i+1}^{N}E_{k}^{ij}U_{1}^{i-1}
+\end{equation} 
+%Où $x_{i}$ est un opérateur local au site i de la chaîne. Connaissant l'expression de la matrice de monodromie et la matrice de l'opérateur $x_{0}$ donnée par une matrice de Pauli dans notre représentation, la trace sur l'espace auxiliaire du produit des deux opérateurs nous donne une combinaison d'éléments de la matrice de monodromie.
+ 
+The matrices of local operators are linear combinations of elementary matrices in our representation so by theorem (3.1) local operators are embeded in the Yang-Baxter algebra. The computation of the values ​​of these operators when they act on Bethe states and their dual thus reduces to the computation of a scalar product of many particle states. It is therefore appropriate to present how to express them.
+
+\subsection{Scalar products and form factors} 
+ 
+We want to compute the following scalar product:
+\begin{equation}
+S_{N}(\{\mu_{j}\},\{\lambda_{k}\})=\langle 0|\prod_{j=1}^{N}\widetilde{C}(\mu_{j})\prod_{k=1}^{N}\widetilde{B}(\lambda_{k})|0\rangle
+\end{equation}
+ %pourquoi
+ Where $\{\mu_{k}\}$ is a set of parameters solutions of the Beteh equations and $\{\lambda_{k}\}$ is a general set of spectral parameters.  %remarque sur le cas général
+  We also renormalize $$\widetilde{C}(\lambda)\equiv\frac{C(\lambda)}{d(\lambda)}\qquad \widetilde{B}(\lambda)\equiv\frac{B(\lambda)}{d(\lambda)}$$
+ We want to express $S_{N}$ , to do that we will show that it is represented by a determinant. The formula in the general case of two arbitrary N particules states has been derived in \cite{BogIK93L}. The computation is quite technical and in the case of form factors we are interested in the case where one of the state is a Bethe state. N. Slavnov gave the proof \cite{Sla89}. We just briefly present it:
+\begin{theo}
+  Let $\{\mu_{k}\}$ be a set of spectral parameters solutions of the Bethe equations and $r_k=\frac{a(\lambda_k)}{d(\lambda_k)}$, $S_N$ %est une fonction  de 3N variables indépendantes $\{\mu_{j}\},\{\lambda_{k}\},\{r_k\}$ et 
+  verifies the following equality:
+\begin{align}
+&S_{N}(\{r_k\},\{\mu_{j}\},\{\lambda_{k}\})=G_{N}(\{\mu_j\},\{\lambda_k\})det_{N}M_{lk}(\{r_k\},\{\mu_j\},\{\lambda_k\})\\
+&G_{N}(\{\mu_j\},\{\lambda_k\})=\frac{\prod_{i>\alpha}^{N}c(\lambda_{i}-\lambda_{\alpha})c(\mu_{\alpha}-\mu_i)}{\prod_{\alpha=1}^{N}\prod_{i=1}^{N}b(\mu_{i}-\lambda_{\alpha})c(\mu_i-\lambda_i)}\\
+&M_{lk}(\{r_k\},\{\mu_j\},\{\lambda_{\alpha}\})=b^{-1}(\mu_k,\lambda_l)-r_l b^{-1}(\mu_l-\lambda_k)\prod_{m=1}^{N}\frac{b(\mu_m-\lambda_l)}{b(\lambda_l-\mu_k)}
+\end{align}
+\end{theo}
+ 
+ 
+ 
+ 
+
+
+ 
+ %Connaissant la formule une démonstration par récurrence permet de démontrer simplement cette équation. 
+ 
+We proove it by induction: let us consider $S_N$ as a function of 3N independant variables $\{\mu_{j}\},\{\lambda_{k}\},\{r_k\}$. Let $\Theta_{N}=G_Ndet_{N}M $ the N=1 case is obvious from the commutation relation of B with C: $S_1=c(\mu,\lambda)(1-r)$. We considers that the equation holds till the rank N-1. We will show that it is still true at rank N. The functions have the same structures:\\
+\begin{itemize}
+\item $S_N $ and $\Theta_N $ are symmetric funtctions in $\{\mu_j\}$ and $\{\lambda_{k}\}$ taken separatly: indeed the B and C commute independantly with each others and one observes the symetry on $\Theta_N$. 
+\item $S_N $ ant $\Theta_N $ depend linearly and homogeneously on $r_k$ $\forall k$. 
+\item There are rational functions of their spectral parameters and decrease as $\frac{1}{\lambda_k}$ when $\lambda_k \to \infty $. In the case of the XXZ chain there are rational functions of hyperbolic functions and deacrease as $\frac{1}{sinh(\lambda_k)}$. This property is also true for the parameters $\mu_k$.
+\item $S_N $ and $\Theta_N $ are meromorphic functions, their poles are the points $\lambda_k = \mu_j $ 
+$ \forall k,j \in [1...N] $ and are simple poles.
+\end{itemize}
+The symmetries of $S_N$ ensure that one can restrict the derivation of the residues of $S_N $ to $\mu_N $ without lost of generality. The residues at the poles reduce to $S_{N-1}$ \cite{BogIK93L}:
+
+\begin{multline}
+S_{N}(\{r_k\},\{\mu_{j}\},\{\lambda_{k}\})|_{\mu_N \to \lambda_m}=c(\mu_N,\lambda_m)\prod_{i=1}^{N}\left[\frac{b(\mu_N,\mu_i)}{b(\mu_i,\mu_N)}-r_m\right]\prod_{i=1}^{N-1} b^{-1}(\mu_N,\mu_i)\prod_{i\neq m}^{N} b^{-1}(\lambda_m,\lambda_i)
+\times \\ S_{N-1}(\{r_k\}_{k\neq m},\{\mu_{j}\}_{j \neq m},\{\lambda_{k}\}_{k \neq m})
+\end{multline}
+%\end{enumerate}
+
+Let suppose that till the rank N-1,  $\Theta_{N-1}=S_{N-1}$. When we let $\lambda_N$ tends to the poles of $\Theta_N$ we note that the residues of $\Theta_N$ and $S_N$ are the same at rank N, by induction this is true for all N.
+Let  $\Gamma=S_N-\Theta_N$, the residues of $ S_N$ and $\Theta_N$ are the same thus  $\Gamma$ is an holomorphic function over the complex plane. It is also a bounded function, thus the Liouville theorem ensures that it is constant on its domain. Furthermore $\Gamma$ tends to zero while $\mu_N \to \infty$ thus it is always zero which prooves the theorem.
+
+%On considère les deux côtés de l'égalité indépendamment, le produit scalaire et la représentation sous forme de déterminant.
+ 
+ %Les deux fonctions sont invariantes sous les permutations de $\{\lambda_{k}\}$ et $\{\mu_{j}\}$ séparément. Pour le produit scalaire cela s'explique par le fait que les opérateurs C commutent entre eux ainsi que les B. 
+ 
+% Les deux expressions sont des fonctions méromorphes possédant des pôles simples lorsque $\mu_{j}\to\lambda_{k}$  et on peut constater que leurs expressions coïncident au rang N. Ainsi la différence des ces deux fonctions est une fonction holomorphe dans tout le plan complexe, elle est de plus bornée et nulle lorsque l'un des paramètre de Bethe tend vers l'infini. D'après le théorème de Liouville on en déduit que les deux expressions coïncident pour tout N.
+ %On aurait pu effectuer ce calcul dans le cas où $\langle 0| \prod_{i=1}^{N} C(\lambda_{i}) $ est un état de Bethe à la place de $\prod_{i=1}^{N} B(\lambda_{i})|0\rangle$
+The determinant representation is very convinient. Indeed when one whish to compute $S_N $ with numerical methods the determinant will raise the efficiency of computation \cite{CauM05}. Furthermore the thermodynamic limit is not well defined mathematically because the dimension of the Hilbert space become infinite. But one can reach this limit with the determinant representation and study the model in this limit, when N tends to infinity\cite{Yan52}. %demander explications.
+  
+ %L'expression  du produit scalaire sous forme de déterminant est relié à l'équivalence du modèle à 6 vertex avec conditions aux bords de types parois de domaine et les chaînes de spins XXX-XXZ inhomogènes. Les poids statistiques des vertex sont les entrées de la matrice R associée aux chaînes de spin.   %parler plus précisément de cette équivalence
+  %En effet d'après les travaux de Izergin-Korepin la fonction de partition du modèle à 6 vertex peut également s'exprimer sous forme de déterminant.
+ 
+
+%$$ Z_{N}(\{\lambda_{\alpha}\},\{\xi_{j}\})=\langle 0'|\prod_{i=1}^{N}B(\lambda_{i},\xi_{1},...,\xi_{N})|0\rangle$$ 
+
+
+%où $\langle 0'|$ et$|0\rangle$ sont les états où les spin sont respectivement tous vers le haut et vers le bas. Ceux-ci correspondent aux conditions aux bords périodiques du réseau pour le modèle à 6 vertex.
+%En faisant usage de la relation de récursion pour la fonction de partition [] et un principe de démonstration similaire à celui du produit scalaire on peut démontrer la fameuse identité d'Izergin-Korepin pour la fonction de partition du modèle à 6 vertex:
+
+
+%$$Z_{N}(\{\lambda_{\alpha}\},\{\xi_{j}\})=\frac{\prod_{j=1}^{N}\prod_{\alpha=1}^{N}\phi(\lambda_{\alpha}-\xi_{j})}{\prod_{j>k}\phi(\xi_{k}-\xi_{j})\prod_{\alpha>\beta}\phi(\lambda_{\alpha}-\lambda_{\beta})}\det\Omega(\{\lambda_{j}\},\{\xi_{j}\})$$
+
+
+
+%Où $$\Omega(\{\lambda_{j}\},\{\xi_{j}\})=\frac{\phi(\theta)}{(\lambda_{\alpha}-\xi_{j}+\theta)(\lambda_{\alpha}-\xi_{j})}$$
+ 
+In the particular case of the scalar product of two Bethe states, in other words when we consider the norm of the Bethe vector, we find out the generalized Gaudin hypothesis\cite{BogIK93L}.
+
+
+$$\langle 0|\prod_{j=1}^{N}C(\mu_{j})\prod_{k=1}^{N}B(\lambda_{k})|0\rangle =\phi^{n}(\theta)\prod_{\alpha\neq\beta}\frac{\phi(\lambda_{\alpha}-\lambda_{\beta}+\theta)}{\phi(\lambda_{\alpha}-\lambda_{\beta})}\det(\partial_{\lambda_{b}}\varphi_{a})$$
+
+
+Where $\partial_{\lambda_{b}}\varphi_{a}$ is a $N \times N$ matrix such that:
+
+\begin{equation}
+\phi_{a}=-\ln\left(r(\lambda_{a})\prod_{\overset{k=1}{k\neq a}}^{N} \frac{b(\lambda_{a},\lambda_{k})}{b(\lambda_{k},\lambda_{a})}\right)
+\end{equation}
+
+The problem of the computation of the scalar product is reduced to a determinant, we are now able to derive the forms factors of the chain.
+%question spin de dimension plus élevée
+%generalisation à des modèles avec intéractions à plus longue portée?
+%\subsection{facteurs de formes de la chaîne de spin}
+
+For the sake of simplicity we derive the formula form factors formulae associated to the operator $\sigma_{m}^{-} $.
+According to the formula (2.6), 
+\begin{equation}
+\sigma_{m}^{-}=\prod_{\alpha=1}^{m-1}(A_{1..N}+D_{1..N})(\xi_{\alpha}) . B(\xi_{m}) . \prod_{\alpha=1}^{m-1}(A_{1..N}+D_{1..N})^{-1}(\xi_{\alpha})
+\end{equation}
+ We will explicit the determinant representation of (2.2), the spectral parameters  $\{\lambda\}$ and  $\{\mu\}$ are solutions of the Bethe equations and the Bethe states are eigenvectors of the transfert matrix, they are also egienstates of the translation operator along the chain. Thus the form factor becomes: 
+\begin{align}
+F_{N}(\sigma_{m}^{+})&=\prod_{l=1}^{m-1}t(\{\mu_j\},\xi_l)\prod_{p=1}^{m-1}t^{-1}(\xi_p,\{\lambda_j\})\langle 0|\prod_{k=0}^{N+1}C(\mu_{k})B(\xi_m)\prod_{j=0}^{N}B(\lambda_{j})|0\rangle\\
+&=\prod_{l=1}^{m-1}t(\{\mu_j\},\xi_l)\prod_{p=1}^{m-1}t^{-1}(,\xi_p,\{\lambda_j\})S_{N+1}(\{\mu_{j}\},\{\lambda_{k}\})
+\end{align}
+Where $\lambda_{N+1}=\xi_m $ and $\{\mu_{j}\}$ is a set of parameters solutions of the Bethe equations. $S_{N+1}$ is given by (2.11), indeed $B(\xi_m)\prod_{j=0}^{N}B(\lambda_{j})|0\rangle$ is not a Bethe state and that's why we have considered the scalar product of the previous paragraph. The computation of the forms factor associated to the other local operators is similar\cite{MaiT00}. Thus they can be expressed in determinant representation. We could study these formulae in the frame of the thermondynamic limit\cite{Yan52} or try to extend them to theories where the dimension of the spinor representation is higher.
+
+
+\section{The solid on solid model}
+
+The XXX-XXZ chains are exactly solvable models, thanks to the algebraic Bethe ansatz we are able to obtain all the eigenstates of the Hamiltonian and have access to the mean values of local operators of the chain, the experimentally measurable quantities. Of course one wonders if it is possible to adapt the method to the case of XYZ chain when all the coupling constants in (1.1) are differents. In this case the total spin is not a conserved quantity and we cannot directly solve the model by Bethe ansatz and the computation of the correlation functions of this model is still an open question. Nevertheless, Baxter showed that the XYZ model was equivalent to the SOS model up to a transformation called Vertex-IRF (interaction round face) of the R matrix  of the XYZ model. In addition to the ice rule, that represents the conservation of the charge around a face, the SOS model has the particularity to associate a height $s $ to each vertex of the network. Thus the R matrix will depend on the parameter in addition to its spectral parameters. Then it is not anymore a solution of the Yang-Baxter equation but another one called the dynamical Yang-Baxter equation from which one can span an abelian algebra of transfer matrices restrained to a certain space. Felder and Varchenko studied the natural algebraic structure of the equation leading them to define the elliptic quantum groups $ E _{\tau,\eta}(sl2) $ and study their representations \cite{FelV96a}, \cite{FelV96b}. We will see that the Bethe states induced by the creation operators of the algebra spanned by the dynamical Yang-Baxter equation will also depend on the shifted parameter $ s $  and one can work it out to make the Yang-Baxter equation independant of this dynamical parameter.
+
+\subsection{The dynamical Yang-Baxter equation}
+
+One considers a $N\times N$ square lattice, let $s$ be the height associated to each vertex such that the absolute values of the heights to each ajdacent vertex is one.
+
+\medskip
+
+\begin{pgfpicture}{0cm}{0cm}{2cm}{2cm}
+
+\pgfnodecircle{Node1}[fill]{\pgfxy(2.5,1.5)}{0.05cm}
+\pgfnodecircle{Node2}[fill]{\pgfxy(3.5,1.5)}{0.05cm}
+\pgfnodecircle{Node4}[fill]{\pgfxy(2.5,0.5)}{0.05cm}
+\pgfnodecircle{Node3}[fill]{\pgfxy(3.5,0.5)}{0.05cm}
+\pgfnodeconnline{Node1}{Node2}
+\pgfnodeconnline{Node2}{Node3}
+\pgfnodeconnline{Node3}{Node4}
+\pgfnodeconnline{Node1}{Node4}
+% \pgfputat{\pgfxy(0.35,1)}{\pgfbox[left,center]{
+% ${R}(u_i-\xi_j; s)^{\epsilon_i,\epsilon_j}_{\epsilon'_i,\epsilon'_j}=$}}
+% \pgfline{\pgfxy(3.5,0.5)}{\pgfxy(3.5,1.5)}
+% \pgfline{\pgfxy(2.5,0.5)}{\pgfxy(2.5,1.5)}
+% \pgfline{\pgfxy(2.5,0.5)}{\pgfxy(3.5,0.5)}
+% \pgfline{\pgfxy(2.5,1.5)}{\pgfxy(3.5,1.5)}
+ 
+% \pgfsetendarrow{\pgfarrowto}
+% \pgfsetdash{{3pt}{3pt}}{0pt}
+% \pgfline{\pgfxy(6.7,1)}{\pgfxy(5.3,1)}%fleche horizontale
+% \pgfline{\pgfxy(6,1.7)}{\pgfxy(6,0.3)}%fleche verticale
+% \pgfstroke
+
+ \pgfputat{\pgfxy(2.4,1.6)}{\pgfbox[right,center]{$s$}}
+ \pgfputat{\pgfxy(3.6,1.6)}{\pgfbox[left,center]{$s+\alpha'_i$}}
+% \pgfputat{\pgfxy(6,0)}{\pgfbox[center,center]{$u_i$}}
+ \pgfputat{\pgfxy(2.45,0.1)}{\pgfbox[right,bottom]{$s+\alpha_j$}}
+ \pgfputat{\pgfxy(3.6,0.2)}{\pgfbox[left,bottom]{$s+\alpha_i+\alpha_j$}}
+ \pgfputat{\pgfxy(3.6,-0.2)}{\pgfbox[left,bottom]{$=s+\alpha'_i+\alpha'_j$}}
+% \pgfputat{\pgfxy(5,1)}{\pgfbox[center,center]{$\xi_j$}}
+
+\pgfputat{\pgfxy(3,1.6)}{\pgfbox[center,bottom]{$\alpha'_i$}}
+\pgfputat{\pgfxy(3,0.4)}{\pgfbox[center,top]{$\alpha_i$}}
+\pgfputat{\pgfxy(2.4,0.95)}{\pgfbox[right,center]{$\alpha_j$}}
+\pgfputat{\pgfxy(3.6,0.95)}{\pgfbox[left,center]{$\alpha'_j$}}
+
+
+\pgfputat{\pgfxy(9.12,1.2)}{\pgfbox[center,center]{avec $\alpha_i,\alpha'_i,\alpha_j,\alpha'_j\in\{+1,-1\}$}}
+
+\pgfputat{\pgfxy(9,0.6)}{\pgfbox[center,center]{tels que $\alpha_i+\alpha_j=\alpha'_i+\alpha'_j$,}}
+ 
+%\pgfputat{\pgfxy(9,1)}{\pgfbox[left,center]{
+% $\equiv{W}\binom{s\qquad s+\epsilon'_i}{s+\epsilon_j\ s+\eps_i+\epsilon_j}.$}} 
+\end{pgfpicture}
+
+\medskip
+\noindent
+
+To each height $s$ on an elementary square we define a statistical weight:
+${W}\binom{s\qquad s+\alpha'_i}{s+\alpha_j\ s+\alpha_i+\alpha_j}$  $\alpha_{i}\in\{+,-\}$
+taken as a matrix element of  $R(u; s)\in End(V\otimes V)$ avec $V \simeq \mathbb{C}^2$ %^{\alpha_i,\alpha_j}_{\alpha'_i,\alpha'_j} 
+%telle que son action sur un vecteur de base $(e_+,e_-)\in V$ est:
+%\begin{equation}
+%R(u,s)(e_{\alpha'_{1}},e_{\alpha'_{2}})=\sum{
+%\end{equation}
+
+
+%Les différentes configurations  se regroupent en six éléments non nuls de R et sont représentés graphiquement selon la figure suivante:
+
+The motives of the lattice can adopt six configurations linked to the six non zero satistical weights (see figure 1)
+\begin{figure}[h]
+%
+\centering
+\begin{tikzpicture}
+    \draw(0,5.5) ;
+    \draw(0,-2) ;   % pour donner un peu d'espace
+    
+    %
+
+    \draw (0,3.5) -- (0,4.5) node[above left]{$s$} ; 
+    \draw (0,4.5) -- (1,4.5) node[above right]{$s+1$} ;
+    \draw (1,4.5) -- (1,3.5) node[below right]{$s+2$} ;
+    \draw (1,3.5) -- (0,3.5) node[below left]{$s+1$} ;
+    \draw (0.5,4.5) node[above]{$+$} ;
+    \draw (0.5,3.5) node[below]{$+$} ;
+    \draw (0,4) node[left]{$+$} ;
+    \draw (1,4) node[right]{$+$} ;
+    
+    \draw (0.5,2) node[above]{$1$} ; 
+    
+    %
+    
+    \draw (0,0) -- (0,1) node[above left]{$s$} ; 
+    \draw (0,1) -- (1,1) node[above right]{$s-1$} ;
+    \draw (1,1) -- (1,0) node[below right]{$s-2$} ;
+    \draw (1,0) -- (0,0) node[below left]{$s-1$} ;
+    \draw (0.5,1) node[above]{$-$} ;
+    \draw (0.5,0) node[below]{$-$} ;
+    \draw (0,0.5) node[left]{$-$} ;
+    \draw (1,0.5) node[right]{$-$} ;  
+    
+    \draw (0.5,-1.5) node[above]{$1$} ; 
+    
+    %%
+
+    \draw (4,3.5) -- (4,4.5) node[above left]{$s$} ; 
+    \draw (4,4.5) -- (5,4.5) node[above right]{$s+1$} ;
+    \draw (5,4.5) -- (5,3.5) node[below right]{$s$} ;
+    \draw (5,3.5) -- (4,3.5) node[below left]{$s-1$} ;
+    \draw (4.5,4.5) node[above]{$+$} ;
+    \draw (4.5,3.5) node[below]{$+$} ;
+    \draw (4,4) node[left]{$-$} ;
+    \draw (5,4) node[right]{$-$} ;
+    
+    \draw (4.5,2) node[above]{$\mathsf{b}(u;s)$} ;    
+    
+    %
+    
+    \draw (4,0) -- (4,1) node[above left]{$s$} ; 
+    \draw (4,1) -- (5,1) node[above right]{$s-1$} ;
+    \draw (5,1) -- (5,0) node[below right]{$s$} ;
+    \draw (5,0) -- (4,0) node[below left]{$s+1$} ;
+    \draw (4.5,1) node[above]{$-$} ;
+    \draw (4.5,0) node[below]{$-$} ;
+    \draw (4,0.5) node[left]{$+$} ;
+    \draw (5,0.5) node[right]{$+$} ;  
+    
+    \draw (4.5,-1.5) node[above]{$\mathsf{b}(u;-s)$} ;  
+
+ %%
+
+    \draw (8,3.5) -- (8,4.5) node[above left]{$s$} ; 
+    \draw (8,4.5) -- (9,4.5) node[above right]{$s-1$} ;
+    \draw (9,4.5) -- (9,3.5) node[below right]{$s$} ;
+    \draw (9,3.5) -- (8,3.5) node[below left]{$s-1$} ;
+    \draw (8.5,4.5) node[above]{$-$} ;
+    \draw (8.5,3.5) node[below]{$+$} ;
+    \draw (8,4) node[left]{$-$} ;
+    \draw (9,4) node[right]{$+$} ;
+    
+    \draw (8.5,2) node[above]{${\mathsf{c}}(u;s)$} ;    
+    
+    %
+    
+    \draw (8,0) -- (8,1) node[above left]{$s$} ; 
+    \draw (8,1) -- (9,1) node[above right]{$s+1$} ;
+    \draw (9,1) -- (9,0) node[below right]{$s$} ;
+    \draw (9,0) -- (8,0) node[below left]{$s+1$} ;
+    \draw (8.5,1) node[above]{$+$} ;
+    \draw (8.5,0) node[below]{$-$} ;
+    \draw (8,0.5) node[left]{$+$} ;
+    \draw (9,0.5) node[right]{$-$} ;  
+    
+    \draw (8.5,-1.5) node[above]{$\mathsf{c}(u;-s)$} ;     
+\end{tikzpicture}\vspace{-5mm}
+\caption{\label{6faces} The 6 configurations satisfying the ice rule and their statistical wieghts.}
+%
+\end{figure}
+One define the R matrix of the model associated to the various configurations:
+
+\begin{equation}\label{R-mat}
+  R(u;s)=
+  \begin{pmatrix} 1 & 0 & 0 & 0 \\
+                              0 & \mathsf{b}(u;s) & \mathsf{c}(u;s) & 0 \\
+                              0 & \mathsf{c}(u;-s) & \mathsf{b}(u;-s) & 0 \\
+                              0 & 0 & 0 & 1 
+  \end{pmatrix}
+  \end{equation}
+
+%Où $u_i$ et $\xi_j$ sont des paramètres d'inhomogénéité en un site fixé du réseau, avec:
+
+\begin{equation}
+ \mathsf{b}(u;s)=\frac{[s+1] \,  [u]}{[s] \, [u+1]},           \qquad   \mathsf{c}(u;s)=\frac{[s+u] \,  [1]}{[s] \, [u+1]} , \label{bc1}
+% &\bar{b}(u;s)=\frac{[s-1] \,  [u]}{[s] \, [u+1]}=b(u;-s) , \quad  &  
+% &\bar{c}(u;s)=\frac{[s-u] \,  [1]}{[s] \, [u+1]}=c(u;-s) . \label{bc2}
+ \qquad \text{avec} \quad [u]=\theta_1(\eta u;\tau),
+\end{equation} 
+
+One defines the Theta Jacobi function by:
+
+\begin{equation}\label{theta1}
+  \theta_1(z;\tau)=-i\sum_{k=-\infty}^{\infty} (-1)^k e^{i\pi\tau (k+\frac12)^2} e^{2i\pi (k+\frac12)z},
+  \qquad Im\tau>0,
+\end{equation}
+%
+satisfying
+%
+\begin{equation}\label{periods}
+   \theta_1(z+1;\tau)=-\theta_1(z;\tau), \qquad
+   \theta_1(z+\tau;\tau)= -e^{-i\pi\tau}\, e^{-2\pi i z}\, \theta_1(z;\tau).
+\end{equation}
+
+The R matrix satisfies the dynamical Yang-Baxter equation depending on $s$ the dynamical parameter:
+
+
+\begin{multline}\label{YB}
+  R_{12}(u_1-u_2; s+h_3) \; R_{13}(u_1-u_3 ; s) \; R_{23}( u_2-u_3 ; s+h_1) \\
+  =
+  R_{23}(u_2-u_3; s) \; R_{13}(u_1-u_3 ; s+h_2) \; R_{12}( u_1-u_2 ; s) , \quad
+  \text{avec} \quad
+  h=\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix},
+\end{multline}
+The function $u \to [u]$ is an odd quasiperiodic holomorphic function,$\eta$ and $\frac{\tau}{\eta}$, $\eta \in \mathbb{C}$ with $Im(\tau)>0$. Thus the matrices elements of R are elliptic functions as quotient of quasiperiodic functions of same periods. 
+The equation (2) is linked to the affine quantum groups and equivalently the dynamical Yang-Baxter span an algebra whose representations correspond to the representations of the elliptic quantum group $E_{\tau,\eta}(sl_2)$ studied in the articles \cite{FelV96b}, \cite{FelV96a}. %La matrice R peut être interprétée comme un opérateur d'entrelacement de deux représentations d'algèbre d'opérateurs sur des modules de $E_{\tau,\eta}(sl_2)$ dont l'étude amène Felder et Varchenko à trouver des conditions assurant l'existence de représentations irréductibles et de dimension finie  dont les plus hauts poids caractériseront l'état de référence à partir duquel on va engendrer les états de Bethe du modèle. 
+In the general case the dynamical parameter $s$ can take infinitly many values in $\mathbb{C}_{s_0}=s_0 +\mathbb{Z}$,thus the space of the physical states is infinite even for a lattice of finite size. To work with finite dimensional representations, we will consider the SOS cyclic model (CSOS) in which  $s$ takes values in $\mathbb{C}^{L}_{s_0}=s_0 +\mathbb{Z}/L\mathbb{Z}$ where $L=\eta r$ with L and r relativly prime, thus the statistical weights are periodic in $s$ of period L.
+The transfer matrix of our periodic model corresponds to the product of all statistical weights along a column of elementary motives of the lattice and the heights form a family $(s_1,e_{\alpha_{1}},..,e_{\alpha_{N}})$ such that $|e_{\alpha_{i}}|=|s_{i+1}-s_i|=1, \quad s_{N+1}=s_1 $ and $e_{\alpha_{1}}+...+e_{\alpha_{N}}=0$.
+
+
+\subsection{Bethe equation}
+
+We restrict the Hilbert space to the subspace spanned by the the zero weight states defined by:
+$$H[0]=\{ v \in H / h_{1..N}v=(h_1+...+h_N)v=0\}$$
+
+The monodromy matrix of the model that will allow us to span the Yang Baxter algebra on this space writes :
+\begin{align}\label{monodromy}
+ T_{a, 1\ldots N}(u ; \xi_1,\ldots, \xi_N ; s)
+  &= R_{a N} (u - \xi_N ; s + h_1 +\cdots + h_{N-1} ) \ldots    R_{a 1} (u - \xi_1 ; s  ) \nonumber\\
+  &= \begin{pmatrix} A(u ; s) & B(u ; s) \\
+                                    C(u ; s) & D(u ; s) \end{pmatrix}_{\!\! [a]}.   
+\end{align}
+
+
+Then we deduce the fundamental commutation relation associated to the dynamical Yang-Baxter equation:
+\begin{multline}\label{RTT}
+R_{a_1 a_2} (u_1-u_2 ; s + h_{1\ldots N}) \;
+        T_{a_1, 1\ldots N}(u_1 ; s) \;  T_{a_2, 1\ldots N}(u_2 ; s+h_{a_1}) \\
+= T_{a_2, 1\ldots N}(u_2 ; s)\;  T_{a_1, 1\ldots N}(u_1 ; s+h_{a_2}) \;
+   R_{a_1 a_2} (u_1-u_2 ; s),
+\end{multline}
+The parameter $s$ is shifted, thus we can't obtain the commutation of the transfert matrices by invariance of the trace applyed to each side of the equation. Nevertheless if we consider the restriction of the Hilbert space to the space of zero weight states, which is the case for the periodic model, we note that : 
+\begin{equation}
+\forall \bra{\psi}\in H[0], \bra{\psi}R(u;s+h_{1..N})T_1 T_2=\bra{\psi}R(u;s)T_{a1} T_{a2}
+\end{equation}
+ 
+ In this case the parameter s is not shifted anymore. One has to check that this still holds if we apply $\ket{\psi}$,the proof is not trivial and we can refer to \cite{FelV96a}.Thus we obtain the commutation of transfer matrices on the zero weight space applying the cyclicity of the trace on the previous commutation relation.
+%Si on applique les deux côtés de la relation à un état de l'espace de poids zero, les matrices R deviennent les même de part et d'autre de l'équation. Alors en appliquant la trace sur l'espace auxiliaire et en utilisant sa cyclicité on retrouve une fois de plus que les matrices de transfert commutent deux à deux dans l'espace de poids zero, celui-ci étant stable sous l'action de l'opérateur de transfert.  On va donc pouvoir appliquer l'ansatz de Bethe algébrique sur cet espace afin de diagonaliser la matrice de transfert.
+
+Since we are going to span an operator algebra on $FunH$, it is convinient to define the operators $\widehat{s}$ and $\widehat{\tau}_s$ acting on $ FunH$ such that the operators become independant of $s$ on H[0]:
+\begin{equation}
+    (\widehat{s}\, f)(s)= s\, f(s), \qquad (\widehat{\tau}_s \, f)(s)= f(s+1),
+\end{equation}
+Thus the monodromy matrix writes :
+%\begin{equation}
+  %  (f\, \widehat{s})(s)=  f(s)\, s, \qquad (f \,\widehat{\tau}_s)(s)= f(s-1).
+%\end{equation}
+
+\begin{equation}\label{mon-op}
+   \widehat{T}(u)= \begin{pmatrix} \widehat{A}(u) & \widehat{B}(u) \\
+                                    \widehat{C}(u) & \widehat{D}(u) \end{pmatrix}_{\!\! [a]} 
+                            = T(u; \widehat{s}) \, \begin{pmatrix} \widehat{\tau}_s & 0 \\ 0 & \widehat{\tau}_s^{-1}\end{pmatrix}_{\!\! [a]}       
+           \quad \in\mathrm{End}(V_a\otimes Fun(H)) ,            
+\end{equation}
+
+And the relation (67) becomes:
+\begin{multline}\label{RTT}
+R_{a_1 a_2} (u-v ; \widehat{s} + h_{1\ldots N}) \;
+        \widehat{T}_{a_1, 1\ldots N}(u) \; \widehat{T}_{a_2, 1\ldots N}(v) \\
+= \widehat{T}_{a_2, 1\ldots N}(v)\;  \widehat{T}_{a_1, 1\ldots N}(u) \;
+   R_{a_1 a_2} (u-v ; s),
+\end{multline}
+%Cette définition n'est pas absurde, en effet d'après Felder et Varchenko, on peut associer une algèbre d'opérateur agissant sur FunV et
+The space of zero weight functions is stable under the action of the transfer matrix.Indeed the monodromy matrix elements commute with  $h_{1..N}$ so do the transfer matrix  $\widehat{t}(u)=\widehat{A}(u)+\widehat{D}(u)$ .Thus to any function on H[0] corresponds an element of FunH[0]. Furthermore according to (68), we are sure that on $FunH[0]$ $[\widehat{t}(u),\widehat{t}(\lambda)]=0$. We are able to span the Bethe states of the model on this space and to apply the scattering inverse method in order to derive the Bethe equation and diagonalize the transfer matrix.
+
+%$FunH[0]=\{f\in FunH / f(s+h_{1..N})v=[\widehat{\tau}_{s}^{h_{1..N}}f](s)v=f(s)v \quad, v\in H[0]\}$ 
+%Si $\forall f\in Fun[0]$, $[\widehat{\tau}_{s}^{h_{1..N}}\widehat{t}(u)f](s)=[\widehat{t}(u)f](s)$ sur H[0] alors la stabilité est démontrée.
+%C'est bien le cas en effet en utilisant simplement l'opérateur de translation :
+
+%\begin{align*}
+%[\widehat{\tau}_{s}^{h_{1..N}}\widehat{t}(u)f](s) &=A(u,s+h_{1..N})f(s+h_{1..N}+1)+D(u,s+h_{1..N})f(s+h_{1..N}-1)\\
+												%  &=[\widehat{t}(u)f](s)=A(u,s)f(s+1)+D(u,s)f(s-1)
+%\end{align*}
+
+ 
+
+
+Once again we consider the reference state such that all spins are upward and  
+a general N particules state writes :
+
+\begin{equation}
+s\to\varphi(s) B(v_{1};s)...B(v_n;s-n+1)\ket{0}
+\end{equation}
+
+
+Where $\{v\}=\{v_{1},..,v_{n}\}$ is a set of spectral parameters such that $\forall i<j \quad \eta v_i\neq \eta v_j \quad
+\text{mod}(\mathbb{Z}+\tau\mathbb{Z})$. This restriction moves aside the poles of the functions $[v_i-v_j]^{-1}$ that appear in the computations. The products of B depend on the shifted parameter $s$, therefore they do not commute with each other as in the XXX-XXZ case but define a new relation: 
+\begin{equation}
+B(u_1,s)B(u_2,s+1)=B(u_2,s)B(u_1,s+1)
+\end{equation}
+
+Nevertheless if one considers the operator algebra on FunH, then the operators does not depend explictly on $s$ and we can observe the following commutation relations : %les relations de commutations redeviennent non translatées en s, on a par exemple les relations suivantes:
+
+\begin{align*}
+&[\widehat{X}(u),\widehat{X}(v)]=0\\
+&\widehat{A}(u)\widehat{B}(v)=\frac{[\widehat{s}][v-u+1]}{[\widehat{s}-1][v-u]}\widehat{B}(v)\widehat{A}(u)-\frac{[\widehat{s}+v-u][1]}{[\widehat{s}-1][v-u]}\widehat{B}(u)\widehat{A}(v)
+\end{align*}
+
+
+From this operator algebra one can diagonalize the transfer matrix like we have done in the first section. We definie the general N particule state, which is also symmetric : 
+\begin{equation}\label{state}
+  \ket{ \{v\}, \omega }
+%  :  s \mapsto  \bigg( \varphi_\omega \prod_{j=1}^n\widehat{B}(v_j) \ket{0}\bigg)(s).
+%\omega^s \prod_{j=1}^{n} \frac{[1]}{[s-j]} \, B(v_1;s) B(v_2;s-1)\ldots B(v_n;s-n+1) \ket{0}.
+ = \varphi_\omega \prod_{j=1}^n\widehat{B}(v_j) \, \ket{0},
+ \qquad
+ \text{avec}\quad
+ \varphi_\omega(s)=\frac{\omega^s}{\sqrt{L}}\prod_{j=1}^n\frac{[1]}{[s-j]}.
+\end{equation}
+%Où $\{v\}=\{v_{1},..,v_{n}\}$ est un ensemble de paramètres spectraux tels que $\forall i<j \quad \eta v_i\neq \eta v_j \quad \text{mod}(\mathbb{Z}+\tau\mathbb{Z})$ et $\omega$ est une racine de l'unité : $(-1)^{rn}\omega^L=1$
+With $\omega$  a root of unity: $(-1)^{rn}\omega^L=1$. 
+
+The bethe equations impose conditions on spectral parameters, therefore they can't depend on the dynamical parameter $s$. That's why we define the function $\varphi$ such that the Bethe equations and the eigenvalues of the transfer matrix does'nt depend on $s$. One define the dual state by: 
+\begin{equation}\label{dual}
+   \bra{\{ v\} ,\omega}= \bra{0}\prod_{j=1}^n \widehat{C}(v_j) \; \widetilde{\varphi}_\omega,
+   \qquad \text{avec}\quad 
+   \widetilde{\varphi}_\omega(s)=  \frac{{\omega}^{- s}}{\sqrt{L}}  \prod_{j=0}^{n-1} \frac{[s+j]}{[1]}.
+\end{equation}
+Using the logic of the first section, for operators on FunH, we show that if the parameters $\{v\}$ satisfy the Bethe equations of the model :
+\begin{equation}\label{Bethe}
+    \mathsf{a}(v_j)  \prod_{l\ne j} \frac{[v_l-v_j+1]}{[v_l-v_j]} 
+    =  (-1)^{rp} \omega^{-2} \; \mathsf{d}(v_j)  \prod_{l\ne j} \frac{[v_j-v_l+1]}{[v_j-v_l]} ,
+    \quad j=1,\ldots n,
+\end{equation}
+where $N=2n+pL \quad p \in \mathbb{N}$ 
+%Cette équation est toujours vraie dans le cas non cyclique avec la condition $rp=0$
+then the N particules states are eigen states of the transfer matrix :
+\begin{equation}\label{act-transfer}
+   \widehat{t}(u)\, \ket{\{ v\},\omega }= \tau (u; \{ v\},\omega )\, \ket{\{ v\},\omega },
+   \qquad
+   \bra{ \{v\}, \omega }\,\widehat{t} (u) = \tau(u; \{v\},\omega )\,  \bra{ \{v\} ,\omega },
+\end{equation}
+Associated to the eigenvalues:
+\begin{equation}
+   \tau (u; \{v\},\omega)
+    = \omega \; \mathsf{a}(u) \prod_{l=1}^n \frac{[v_l-u+1]}{[v_l-u]}
+        +  (-1)^{rp}  \omega^{-1} \; \mathsf{d}(u) \prod_{l=1}^n \frac{[u-v_l+1]}{[u-v_l]}.
+    \label{tau}
+    \end{equation}
+ %Ce résultat se généralise dans le cas non cyclique avec la condition $rp=0$
+
+Thus we have diagonalized the transfer matrix (we would also need to proove the completness of the Bethe states). Naturaly we wonder if the previous computation of the correlation functions can extend to the SOS model. The computation of the scalar product is linked with the derivation of the partition function of the model made by Ronsengren \cite{Ros09}. Unlike the partition function of the 6 vertex model with periodic boundary condtions\cite{Ize87} the partition function of the 8 vertex model cannot be expressed as a unique determinant but as a sum of determinants. The formulae of scalar products are harder to derive and we will not present them here, but one can refer to\cite{LevT13a} and note that correlation functions of the local operators are computed with the same method as the one we presented in this report.
+\pagebreak
+\section{Conclusion}
+
+We have diagonalized the Hamiltonian of the XXX-XXZ spin chains using the algebraic Bethe Ansatz and the separation of variables. We have exihibited a way to compute correlation functions of local operators joining the resolution of the scattering inverse problem in the frame of the quantum inverse scattering method with a determinant representation of scalar products. Finally we have presented the SOS model in which the algebraic computations are trickier because of the dynamical Yang-Baxter equation. The aim of the internship was to understand these methods on relativly simple models in order to apply them on the wide open problem of the computation of correlation functions of the XYZ spin chain.
+
+
+
+
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{biblio}
+\end{document}
+
